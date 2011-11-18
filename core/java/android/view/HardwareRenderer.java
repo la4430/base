@@ -103,13 +103,17 @@ public abstract class HardwareRenderer {
      * 
      * @hide
      */
-    public static boolean sRendererDisabled = false;
+    //public static boolean sRendererDisabled = false;
+    //TODO FIX ITWHEN HW RENDERING IS POSSIBLE
+    public static boolean sRendererDisabled = true;
 
     /**
      * Further hardware renderer disabling for the system process.
      * 
      * @hide
      */
+    //public static boolean sSystemRendererDisabled = false;
+    //TODO FIX ITWHEN HW RENDERING IS POSSIBLE
     public static boolean sSystemRendererDisabled = false;
 
     private boolean mEnabled;
