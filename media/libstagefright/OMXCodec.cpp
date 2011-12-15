@@ -2214,12 +2214,8 @@ int64_t OMXCodec::retrieveDecodingTimeUs(bool isCodecSpecific) {
 
 void OMXCodec::on_message(const omx_message &msg) {
     if (mState == ERROR) {
-        if (msg.type != omx_message::EMPTY_BUFFER_DONE) {
-            LOGW("Dropping OMX message - we're in ERROR state.");
-            return;
-        }
-        LOGI("In ERROR state but allowing EMPTY_BUFFER_DONE in order to get " \
-             "back input buffers before closing down.");
+        LOGW("Dropping OMX message - we're in ERROR state.");
+        return;
     }
 
     switch (msg.type) {
