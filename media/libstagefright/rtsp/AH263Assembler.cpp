@@ -100,17 +100,17 @@ ARTPAssembler::AssemblyStatus AH263Assembler::addPacket(
     }
 
     unsigned payloadHeader = U16_AT(buffer->data());
+    CHECK_EQ(payloadHeader >> 11, 0u);  // RR=0
     unsigned P = (payloadHeader >> 10) & 1;
     CHECK_EQ((payloadHeader >> 9) & 1, 0u);  // V=0
-    unsigned PLEN = (payloadHeader >> 3) & 0x3f;
-    CHECK_LE(PLEN, buffer->size() - 1);
+    CHECK_EQ((payloadHeader >> 3) & 0x3f, 0u);  // PLEN=0
+    CHECK_EQ(payloadHeader & 7, 0u);  // PEBIT=0
 
     if (P) {
-        buffer->data()[PLEN] = 0x00;
-        buffer->data()[PLEN + 1] = 0x00;
-        buffer->setRange(buffer->offset() + PLEN, buffer->size() - PLEN);
+        buffer->data()[0] = 0x00;
+        buffer->data()[1] = 0x00;
     } else {
-        buffer->setRange(buffer->offset() + 2 + PLEN, buffer->size() - 2 - PLEN);
+        buffer->setRange(buffer->offset() + 2, buffer->size() - 2);
     }
 
     mPackets.push_back(buffer);
