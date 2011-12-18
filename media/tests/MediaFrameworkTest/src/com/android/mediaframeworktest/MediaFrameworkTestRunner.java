@@ -65,12 +65,19 @@ public class MediaFrameworkTestRunner extends InstrumentationTestRunner {
     @Override
     public void onCreate (Bundle arguments){
         Log.v(TAG, "step into onCreate");
+        super.onCreate(arguments);
+
+        String minCameraFps = (String) arguments.get("min_camera_fps");
+        System.out.print("min_camera_" + minCameraFps);
+
+        if (minCameraFps != null ) {
+            mMinCameraFps = Integer.parseInt(minCameraFps);
+        }
         String targetDir = (String)arguments.get("targetDir");
         if(targetDir != null){
              Log.v(TAG, "targetDir="+targetDir);
              mTargetDir = targetDir;
         }
-        super.onCreate(arguments);
         Log.v(TAG, "step out onCreate");
     }
 
@@ -150,17 +157,5 @@ public class MediaFrameworkTestRunner extends InstrumentationTestRunner {
     @Override
     public ClassLoader getLoader() {
         return MediaFrameworkTestRunner.class.getClassLoader();
-    }
-
-    @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-
-        String minCameraFps = (String) icicle.get("min_camera_fps");
-        System.out.print("min_camera_" + minCameraFps);
-
-        if (minCameraFps != null ) {
-            mMinCameraFps = Integer.parseInt(minCameraFps);
-        }
     }
 }
