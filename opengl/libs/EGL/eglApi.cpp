@@ -51,6 +51,26 @@ using namespace android;
 
 #define EGL_VERSION_HW_ANDROID  0x3143
 
+#ifdef TARGET_BOARD_SNOWBALL
+static char const * const sVendorString     = "Android";
+static char const * const sVersionString    = "1.4 Android META-EGL";
+static char const * const sClientApiString  = "OpenGL ES";
+static char const * const sExtensionString  =
+	"EGL_KHR_image "
+	"EGL_KHR_image_base "
+	"EGL_KHR_image_pixmap "
+	"EGL_KHR_gl_texture_2D_image "
+	"EGL_KHR_gl_texture_cubemap_image "
+	"EGL_KHR_gl_renderbuffer_image "
+	"EGL_KHR_fence_sync "
+	"EGL_ANDROID_image_native_buffer "
+	"EGL_ANDROID_swap_rectangle "
+#ifndef TARGET_BOARD_SNOWBALL
+	"EGL_NV_system_time "
+#endif
+	;
+#endif
+
 struct extention_map_t {
     const char* name;
     __eglMustCastToProperFunctionPointerType address;
@@ -65,10 +85,12 @@ static const extention_map_t sExtentionMap[] = {
             (__eglMustCastToProperFunctionPointerType)&eglCreateImageKHR },
     { "eglDestroyImageKHR",
             (__eglMustCastToProperFunctionPointerType)&eglDestroyImageKHR },
+#ifndef TARGET_BOARD_SNOWBALL
     { "eglGetSystemTimeFrequencyNV",
             (__eglMustCastToProperFunctionPointerType)&eglGetSystemTimeFrequencyNV },
     { "eglGetSystemTimeNV",
             (__eglMustCastToProperFunctionPointerType)&eglGetSystemTimeNV },
+#endif
 };
 
 // accesses protected by sExtensionMapMutex
@@ -971,6 +993,12 @@ const char* eglQueryString(EGLDisplay dpy, EGLint name)
         case EGL_VERSION:
             return dp->getVersionString();
         case EGL_EXTENSIONS:
+#ifdef TARGET_BOARD_SNOWBALL
+            if (NULL != dp->disp[IMPL_HARDWARE].queryString.extensions)
+                return dp->disp[IMPL_HARDWARE].queryString.extensions;
+            else
+                return sExtensionString;
+#endif
             return dp->getExtensionString();
         case EGL_CLIENT_APIS:
             return dp->getClientApiString();
@@ -1444,6 +1472,7 @@ EGLBoolean eglGetSyncAttribKHR(EGLDisplay dpy, EGLSyncKHR sync, EGLint attribute
 
 /* ANDROID extensions entry-point go here */
 
+#ifndef TARGET_BOARD_SNOWBALL
 // ----------------------------------------------------------------------------
 // NVIDIA extensions
 // ----------------------------------------------------------------------------
@@ -1486,3 +1515,4 @@ EGLuint64NV eglGetSystemTimeNV()
 
     return setErrorQuiet(EGL_BAD_DISPLAY, 0);
 }
+#endif

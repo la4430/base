@@ -1778,14 +1778,24 @@ status_t SurfaceFlinger::renderScreenToTextureLocked(DisplayID dpy,
     GLuint name, tname;
     glGenTextures(1, &tname);
     glBindTexture(GL_TEXTURE_2D, tname);
+#ifdef TARGET_BOARD_SNOWBALL
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+            hw_w, hw_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+#else
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
             hw_w, hw_h, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+#endif
     if (glGetError() != GL_NO_ERROR) {
         while ( glGetError() != GL_NO_ERROR ) ;
         GLint tw = (2 << (31 - clz(hw_w)));
         GLint th = (2 << (31 - clz(hw_h)));
+#ifdef TARGET_BOARD_SNOWBALL
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+                tw, th, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+#else
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
                 tw, th, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+#endif
         u = GLfloat(hw_w) / tw;
         v = GLfloat(hw_h) / th;
     }
