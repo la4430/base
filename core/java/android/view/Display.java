@@ -335,7 +335,7 @@ public class Display {
      * @hide
      */
     public int getRawExternalWidth() {
-        return 1280;
+        return 1920;
     }
 
     /**
@@ -344,7 +344,7 @@ public class Display {
      * @hide
      */
     public int getRawExternalHeight() {
-        return 720;
+        return 1080;
     }
 
     /**
