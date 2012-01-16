@@ -426,6 +426,7 @@ public class EthernetStateMachine extends StateMachine {
                              Slog.d(TAG, "DhcpHandler: DHCP request started");
                              DhcpInfoInternal dhcpInfoInternal = new DhcpInfoInternal();
                              if (NetworkUtils.runDhcp(mInterfaceName, dhcpInfoInternal)) {
+                                 SystemProperties.set("net.dns1", dhcpInfoInternal.dns1);
                                  event = EVENT_INTERFACE_CONFIGURATION_SUCCEEDED;
                                  Slog.d(TAG, "DhcpHandler: DHCP request succeeded: " + dhcpInfoInternal.toString());
                             } else {
