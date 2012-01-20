@@ -65,7 +65,6 @@ public class MediaFrameworkTestRunner extends InstrumentationTestRunner {
     @Override
     public void onCreate (Bundle arguments){
         Log.v(TAG, "step into onCreate");
-        super.onCreate(arguments);
 
         String minCameraFps = (String) arguments.get("min_camera_fps");
         System.out.print("min_camera_" + minCameraFps);
@@ -78,6 +77,9 @@ public class MediaFrameworkTestRunner extends InstrumentationTestRunner {
              Log.v(TAG, "targetDir="+targetDir);
              mTargetDir = targetDir;
         }
+        //super.onCreate(arguments) should be called after
+        //the arguments' value has been processed
+        super.onCreate(arguments);
         Log.v(TAG, "step out onCreate");
     }
 
