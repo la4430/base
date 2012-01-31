@@ -916,6 +916,12 @@ bool CameraService::Client::lockIfMessageWanted(int32_t msgType) {
             LOG1("lockIfMessageWanted(%d): enter sleep", msgType);
         }
         usleep(CHECK_MESSAGE_INTERVAL * 1000);
+        // Return true after 100ms. We don't want to enter in an infinite loop.
+        if (sleepCount == 10) {
+            LOGE("lockIfMessageWanted(%d): timed out in %d ms",
+                msgType, sleepCount * CHECK_MESSAGE_INTERVAL);
+            return true;
+        }
     }
     LOGW("lockIfMessageWanted(%d): dropped unwanted message", msgType);
     return false;
